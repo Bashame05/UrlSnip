@@ -19,7 +19,7 @@ A fast, lightweight URL shortener REST API built with Spring Boot and MySQL.
   - [Run](#run)
 - [Environment Variables](#environment-variables)
 - [Project Structure](#project-structure)
-- [License](#license)
+- [Future Improvements](#future-improvements-(v2))
 
 ---
 
