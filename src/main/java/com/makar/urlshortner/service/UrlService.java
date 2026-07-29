@@ -2,9 +2,11 @@ package com.makar.urlshortner.service;
 
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.makar.urlshortner.dto.UrlAnalyticsDto;
 import com.makar.urlshortner.dto.UrlRequestDto;
 import com.makar.urlshortner.dto.UrlResponseDto;
 import com.makar.urlshortner.exception.NoSuchUrlException;
+import com.makar.urlshortner.mapper.UrlAnalyticsMapper;
 import com.makar.urlshortner.mapper.UrlResponseMapper;
 import com.makar.urlshortner.model.UrlMapping;
 import com.makar.urlshortner.repository.UrlRepository;
@@ -17,14 +19,19 @@ import java.util.Optional;
 public class UrlService {
     private final UrlRepository urlRepository;
     private final UrlResponseMapper urlResponseMapper;
-    public UrlService(UrlRepository urlRepository, UrlResponseMapper urlResponseMapper) {
+    public final UrlAnalyticsMapper urlAnalyticsMapper;
+
+    public UrlService(UrlRepository urlRepository,
+                      UrlResponseMapper urlResponseMapper,
+                      UrlAnalyticsMapper urlAnalyticsMapper) {
         this.urlRepository = urlRepository;
         this.urlResponseMapper = urlResponseMapper;
+        this.urlAnalyticsMapper = urlAnalyticsMapper;
     }
 
     public UrlResponseDto shortenUrl(UrlRequestDto urlRequestDto) {
         Optional<UrlMapping> urlMapping = findExistingUrl(urlRequestDto.longUrl());
-        if(urlMapping.isPresent()){
+        if (urlMapping.isPresent()) {
             return urlResponseMapper.apply(urlMapping.get());
         }
         UrlMapping newUrl = new UrlMapping();
@@ -36,28 +43,35 @@ public class UrlService {
         return urlResponseMapper.apply(urlRepository.save(newUrl));
     }
 
-    private String getUniqueShortUrl(){
+    private String getUniqueShortUrl() {
         String shortUrl = generateShortUrl();
-        while(urlRepository.existsByShortUrl(shortUrl)){
+        while (urlRepository.existsByShortUrl(shortUrl)) {
             shortUrl = generateShortUrl();
         }
         return shortUrl;
     }
+
     private String generateShortUrl() {
         String shortUrl = NanoIdUtils
-                .randomNanoId(NanoIdUtils.DEFAULT_NUMBER_GENERATOR,NanoIdUtils.DEFAULT_ALPHABET,7);
+                .randomNanoId(NanoIdUtils.DEFAULT_NUMBER_GENERATOR, NanoIdUtils.DEFAULT_ALPHABET, 7);
         return shortUrl;
     }
 
-    public Optional<UrlMapping> findExistingUrl(String longUrl){
+    public Optional<UrlMapping> findExistingUrl(String longUrl) {
         return urlRepository.findByLongUrl(longUrl);
     }
 
-    public String redirect(String shortUrl){
+    public String redirect(String shortUrl) {
         UrlMapping url = urlRepository.findByShortUrl(shortUrl)
-                .orElseThrow(()-> new NoSuchUrlException("No such url found"));
+                .orElseThrow(() -> new NoSuchUrlException("No such url found"));
         url.setLastAccessed(LocalDateTime.now());
-        url.setClickCount(url.getClickCount()+1);
+        url.setClickCount(url.getClickCount() + 1);
         return urlRepository.save(url).getLongUrl();
+    }
+
+    public UrlAnalyticsDto analytics(String shortUrl){
+        UrlMapping url = urlRepository.findByShortUrl(shortUrl)
+                .orElseThrow(() -> new NoSuchUrlException("No such url found"));
+        return urlAnalyticsMapper.apply(url);
     }
 }

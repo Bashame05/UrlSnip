@@ -1,6 +1,7 @@
 package com.makar.urlshortner.controller;
 
 
+import com.makar.urlshortner.dto.UrlAnalyticsDto;
 import com.makar.urlshortner.dto.UrlRequestDto;
 import com.makar.urlshortner.dto.UrlResponseDto;
 import com.makar.urlshortner.service.UrlService;
@@ -29,5 +30,10 @@ public class UrlController {
                 .status(HttpStatus.FOUND)
                 .location(URI.create(longUrl))
                 .build();
+    }
+
+    @GetMapping("/api/urls/{shortUrl}/analytics")
+    public ResponseEntity<UrlAnalyticsDto> analytics(@PathVariable String shortUrl){
+        return ResponseEntity.ok(urlService.analytics(shortUrl));
     }
 }
