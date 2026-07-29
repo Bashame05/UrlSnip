@@ -2,7 +2,7 @@
 
 A fast, lightweight URL shortener REST API built with Spring Boot and MySQL.
 
-> **Version:** v1.0
+> **Version:** v1.0.0
 
 ---
 
@@ -95,7 +95,7 @@ POST /api/urls
 ```json
 {
   "longUrl": "https://www.example.com/some/very/long/path",
-  "shortUrl": "localhost:7000/aB3xK9q",
+  "shortUrl": "http://localhost:7000/aB3xK9q",
   "createdAt": "2026-07-29T19:30:00"
 }
 ```
@@ -129,7 +129,7 @@ GET /api/urls/{shortCode}/analytics
 ```json
 {
   "longUrl": "https://www.example.com/some/very/long/path",
-  "shortUrl": "localhost:7000/aB3xK9q",
+  "shortUrl": "http://localhost:7000/aB3xK9q",
   "createdAt": "2026-07-29T19:30:00",
   "lastAccessed": "2026-07-29T19:45:12",
   "clickCount": 42
@@ -236,7 +236,7 @@ url-shortner/
 
 ---
 
-## Future Improvements (v2 Roadmap)
+## Future Improvements (v2)
 
 | Feature                      | Description                                                                                                  |
 |------------------------------|--------------------------------------------------------------------------------------------------------------|
