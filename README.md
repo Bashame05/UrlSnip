@@ -164,8 +164,8 @@ GET /api/urls/{shortCode}/analytics
    Create a `.env` file in the project root (this file is git-ignored):
    ```env
    DB_URL=jdbc:mysql://localhost:3306/urls
-   DB_USER=root
-   DB_PASSWORD=your_password
+   DB_USER=you_db_username
+   DB_PASSWORD=your_db_password
    ABSOLUTE_URL=localhost:7000/
    ```
 
@@ -204,8 +204,8 @@ The application starts on **port 7000** by default.
 url-shortner/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/makar/urlshortner/
-│   │   │   ├── UrlShortnerApplication.java      # Application entry point
+│   │   ├── java/com/makar/UrlSnip/
+│   │   │   ├── UrlSnipApplication.java      # Application entry point
 │   │   │   ├── controller/
 │   │   │   │   └── UrlController.java           # REST API endpoints
 │   │   │   ├── service/
