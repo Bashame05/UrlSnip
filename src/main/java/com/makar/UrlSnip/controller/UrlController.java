@@ -1,10 +1,10 @@
-package com.makar.urlshortner.controller;
+package com.makar.UrlSnip.controller;
 
 
-import com.makar.urlshortner.dto.UrlAnalyticsDto;
-import com.makar.urlshortner.dto.UrlRequestDto;
-import com.makar.urlshortner.dto.UrlResponseDto;
-import com.makar.urlshortner.service.UrlService;
+import com.makar.UrlSnip.dto.UrlAnalyticsDto;
+import com.makar.UrlSnip.dto.UrlRequestDto;
+import com.makar.UrlSnip.dto.UrlResponseDto;
+import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

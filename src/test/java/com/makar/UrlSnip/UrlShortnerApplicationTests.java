@@ -1,4 +1,4 @@
-package com.makar.urlshortner;
+package com.makar.UrlSnip;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

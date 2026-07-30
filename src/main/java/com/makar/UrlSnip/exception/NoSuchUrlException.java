@@ -1,4 +1,4 @@
-package com.makar.urlshortner.exception;
+package com.makar.UrlSnip.exception;
 
 public class NoSuchUrlException extends RuntimeException {
     public NoSuchUrlException(String message) {

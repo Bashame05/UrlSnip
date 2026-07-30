@@ -1,4 +1,4 @@
-package com.makar.urlshortner.dto;
+package com.makar.UrlSnip.dto;
 
 import java.time.LocalDateTime;
 

@@ -1,7 +1,7 @@
-package com.makar.urlshortner.mapper;
+package com.makar.UrlSnip.mapper;
 
-import com.makar.urlshortner.dto.UrlAnalyticsDto;
-import com.makar.urlshortner.model.UrlMapping;
+import com.makar.UrlSnip.dto.UrlAnalyticsDto;
+import com.makar.UrlSnip.model.UrlMapping;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

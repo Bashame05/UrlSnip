@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.makar</groupId>
-    <artifactId>url-shortner</artifactId>
+    <artifactId>UrlSnip</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>url-shortner</name>
+    <name>UrlSnip</name>
     <description>url-shortner</description>
     <url/>
     <licenses>

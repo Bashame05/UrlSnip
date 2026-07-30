@@ -1,4 +1,4 @@
-package com.makar.urlshortner.model;
+package com.makar.UrlSnip.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

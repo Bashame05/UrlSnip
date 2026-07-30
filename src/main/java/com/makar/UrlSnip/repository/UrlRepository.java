@@ -1,8 +1,7 @@
-package com.makar.urlshortner.repository;
+package com.makar.UrlSnip.repository;
 
-import com.makar.urlshortner.model.UrlMapping;
+import com.makar.UrlSnip.model.UrlMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

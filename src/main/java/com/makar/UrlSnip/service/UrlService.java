@@ -1,15 +1,15 @@
-package com.makar.urlshortner.service;
+package com.makar.UrlSnip.service;
 
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
-import com.makar.urlshortner.dto.UrlAnalyticsDto;
-import com.makar.urlshortner.dto.UrlRequestDto;
-import com.makar.urlshortner.dto.UrlResponseDto;
-import com.makar.urlshortner.exception.NoSuchUrlException;
-import com.makar.urlshortner.mapper.UrlAnalyticsMapper;
-import com.makar.urlshortner.mapper.UrlResponseMapper;
-import com.makar.urlshortner.model.UrlMapping;
-import com.makar.urlshortner.repository.UrlRepository;
+import com.makar.UrlSnip.dto.UrlAnalyticsDto;
+import com.makar.UrlSnip.dto.UrlRequestDto;
+import com.makar.UrlSnip.dto.UrlResponseDto;
+import com.makar.UrlSnip.exception.NoSuchUrlException;
+import com.makar.UrlSnip.mapper.UrlAnalyticsMapper;
+import com.makar.UrlSnip.mapper.UrlResponseMapper;
+import com.makar.UrlSnip.model.UrlMapping;
+import com.makar.UrlSnip.repository.UrlRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
