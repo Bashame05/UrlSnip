@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
                         noSuchUrlException.getMessage()
                 ));
     }
+    @ExceptionHandler(AliasNotAllowedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAliasNotAllowedException(AliasNotAllowedException aliasNotAllowedException) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        aliasNotAllowedException.getMessage()
+                ));
+    }
 }

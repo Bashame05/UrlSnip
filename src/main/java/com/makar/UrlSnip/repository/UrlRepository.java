@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UrlRepository extends JpaRepository<UrlMapping, Long> {
-    boolean existsByShortUrl(String shortUrl);
+    boolean existsByShortUrlIgnoreCaseOrCustomAliasIgnoreCase(String shortUrl, String customAlias);
     Optional<UrlMapping> findByLongUrl(String longUrl);
     Optional<UrlMapping> findByShortUrl(String shortUrl);
 }

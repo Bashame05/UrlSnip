@@ -21,6 +21,8 @@ public class UrlMapping {
     private String shortUrl;
     @Column(unique = true, nullable = false)
     private String longUrl;
+    @Column(unique = true)
+    private String customAlias;
     private LocalDateTime createdAt;
     private LocalDateTime lastAccessed;
     private Long clickCount;
