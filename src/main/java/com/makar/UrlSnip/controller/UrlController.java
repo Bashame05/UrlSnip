@@ -32,8 +32,8 @@ public class UrlController {
                 .build();
     }
 
-    @GetMapping("/api/urls/{shortUrl}/analytics")
-    public ResponseEntity<UrlAnalyticsDto> analytics(@PathVariable String shortUrl){
-        return ResponseEntity.ok(urlService.analytics(shortUrl));
+    @GetMapping("/api/urls/{identifier}/analytics")
+    public ResponseEntity<UrlAnalyticsDto> analytics(@PathVariable String identifier){
+        return ResponseEntity.ok(urlService.analytics(identifier));
     }
 }

@@ -92,17 +92,21 @@ public class UrlService {
         return urlRepository.findByLongUrl(longUrl);
     }
 
-    public String redirect(String shortUrl) {
-        UrlMapping url = urlRepository.findByShortUrl(shortUrl)
-                .orElseThrow(() -> new NoSuchUrlException("No such url found"));
+    public String redirect(String identifier) {
+        UrlMapping url = findByIdentifier(identifier);
         url.setLastAccessed(LocalDateTime.now());
         url.setClickCount(url.getClickCount() + 1);
         return urlRepository.save(url).getLongUrl();
     }
 
-    public UrlAnalyticsDto analytics(String shortUrl){
-        UrlMapping url = urlRepository.findByShortUrl(shortUrl)
-                .orElseThrow(() -> new NoSuchUrlException("No such url found"));
+    public UrlAnalyticsDto analytics(String identifier) {
+        UrlMapping url = findByIdentifier(identifier);
         return urlAnalyticsMapper.apply(url);
+    }
+
+    private UrlMapping findByIdentifier(String identifier) {
+        UrlMapping urlMapping = urlRepository.findByShortUrlIgnoreCaseOrCustomAliasIgnoreCase(identifier,identifier)
+                .orElseThrow(() -> new NoSuchUrlException("No such URL or alias found"));
+        return urlMapping;
     }
 }
