@@ -22,6 +22,7 @@ public class UrlAnalyticsMapper implements Function<UrlMapping, UrlAnalyticsDto>
                 shortUrlBuilder.buildCompleteShortUrl(urlMapping),
                 urlMapping.getCreatedAt(),
                 urlMapping.getLastAccessed(),
+                urlMapping.getExpiresAt(),
                 urlMapping.getClickCount()
         );
     }

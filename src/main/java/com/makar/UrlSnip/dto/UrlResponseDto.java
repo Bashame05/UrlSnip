@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public record UrlResponseDto(
         String longUrl,
         String shortUrl,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime expiresIn
 ) {
 }

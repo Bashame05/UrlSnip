@@ -7,6 +7,7 @@ public record UrlAnalyticsDto(
         String shortUrl,
         LocalDateTime createdAt,
         LocalDateTime lastAccessed,
+        LocalDateTime expiresAt,
         Long clickCount
 ) {
 }

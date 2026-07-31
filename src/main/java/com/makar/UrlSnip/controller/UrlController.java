@@ -7,6 +7,7 @@ import com.makar.UrlSnip.dto.UrlResponseDto;
 import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -19,7 +20,7 @@ public class UrlController {
         this.urlService = urlService;
     }
     @PostMapping("/api/urls")
-    public ResponseEntity<UrlResponseDto> shortenUrl(@RequestBody UrlRequestDto urlRequestDto) {
+    public ResponseEntity<UrlResponseDto> shortenUrl(@Validated @RequestBody UrlRequestDto urlRequestDto) {
         return ResponseEntity.ok(urlService.shortenUrl(urlRequestDto));
     }
 

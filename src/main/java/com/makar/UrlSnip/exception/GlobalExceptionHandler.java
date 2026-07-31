@@ -34,4 +34,16 @@ public class GlobalExceptionHandler {
                         aliasNotAllowedException.getMessage()
                 ));
     }
+    @ExceptionHandler(UrlExpiredException.class)
+    public ResponseEntity<ErrorResponseDto> handleUrlExpiredException(UrlExpiredException urlExpiredException) {
+        HttpStatus status = HttpStatus.GONE;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        urlExpiredException.getMessage()
+                ));
+    }
 }

@@ -20,7 +20,8 @@ public class UrlResponseMapper implements Function<UrlMapping, UrlResponseDto> {
         return new UrlResponseDto(
                 urlMapping.getLongUrl(),
                 shortUrlBuilder.buildCompleteShortUrl(urlMapping),
-                urlMapping.getCreatedAt()
+                urlMapping.getCreatedAt(),
+                urlMapping.getExpiresAt()
         );
     }
 }

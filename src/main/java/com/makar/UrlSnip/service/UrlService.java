@@ -7,6 +7,7 @@ import com.makar.UrlSnip.dto.UrlRequestDto;
 import com.makar.UrlSnip.dto.UrlResponseDto;
 import com.makar.UrlSnip.exception.AliasNotAllowedException;
 import com.makar.UrlSnip.exception.NoSuchUrlException;
+import com.makar.UrlSnip.exception.UrlExpiredException;
 import com.makar.UrlSnip.mapper.UrlAnalyticsMapper;
 import com.makar.UrlSnip.mapper.UrlResponseMapper;
 import com.makar.UrlSnip.model.UrlMapping;
@@ -47,8 +48,9 @@ public class UrlService {
         newUrl.setLongUrl(urlRequestDto.longUrl());
         if(urlRequestDto.customAlias() != null) {
             newUrl.setCustomAlias(checkIfAliasIsUnique(urlRequestDto.customAlias()));
-        }else{
-            newUrl.setCustomAlias(null);
+        }
+        if(urlRequestDto.expiresInDays() != null && urlRequestDto.expiresInDays() > 0) {
+            newUrl.setExpiresAt(LocalDateTime.now().plusDays(urlRequestDto.expiresInDays()));
         }
         newUrl.setShortUrl(getUniqueShortUrl());
         newUrl.setClickCount(0L);
@@ -94,6 +96,9 @@ public class UrlService {
 
     public String redirect(String identifier) {
         UrlMapping url = findByIdentifier(identifier);
+        if(url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new UrlExpiredException("URL has expired");
+        }
         url.setLastAccessed(LocalDateTime.now());
         url.setClickCount(url.getClickCount() + 1);
         return urlRepository.save(url).getLongUrl();

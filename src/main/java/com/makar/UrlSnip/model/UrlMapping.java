@@ -25,6 +25,7 @@ public class UrlMapping {
     private String customAlias;
     private LocalDateTime createdAt;
     private LocalDateTime lastAccessed;
+    private LocalDateTime expiresAt;
     private Long clickCount;
 
 }
