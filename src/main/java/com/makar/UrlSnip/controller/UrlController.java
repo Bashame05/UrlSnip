@@ -6,6 +6,7 @@ import com.makar.UrlSnip.dto.UrlRequestDto;
 import com.makar.UrlSnip.dto.UrlResponseDto;
 import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,12 @@ public class UrlController {
     @GetMapping("/api/urls/{identifier}/analytics")
     public ResponseEntity<UrlAnalyticsDto> analytics(@PathVariable String identifier){
         return ResponseEntity.ok(urlService.analytics(identifier));
+    }
+
+    @GetMapping(value = "/api/urls/{identifier}/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getQr(@PathVariable String identifier) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(urlService.getQrCode(identifier));
     }
 }

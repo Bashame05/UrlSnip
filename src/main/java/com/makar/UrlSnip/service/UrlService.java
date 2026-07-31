@@ -2,6 +2,11 @@ package com.makar.UrlSnip.service;
 
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.makar.UrlSnip.dto.UrlAnalyticsDto;
 import com.makar.UrlSnip.dto.UrlRequestDto;
 import com.makar.UrlSnip.dto.UrlResponseDto;
@@ -14,6 +19,10 @@ import com.makar.UrlSnip.model.UrlMapping;
 import com.makar.UrlSnip.repository.UrlRepository;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +47,9 @@ public class UrlService {
 
     private final List<String> prohibitedAliases = List.of(
             "urls","api","health","analytics","docs","swagger","swaggerui","actuator","error","favicon.ico","robots.txt");
+
+    private final int QR_WIDTH = 300;
+    private final int QR_HEIGHT = 300;
 
     public UrlResponseDto shortenUrl(UrlRequestDto urlRequestDto) {
         Optional<UrlMapping> urlMapping = findExistingUrl(urlRequestDto.longUrl());
@@ -113,5 +125,34 @@ public class UrlService {
         UrlMapping urlMapping = urlRepository.findByShortUrlIgnoreCaseOrCustomAliasIgnoreCase(identifier,identifier)
                 .orElseThrow(() -> new NoSuchUrlException("No such URL or alias found"));
         return urlMapping;
+    }
+    
+    public byte[] getQrCode(String identifier) {
+        UrlMapping url = findByIdentifier(identifier);
+        if(url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new UrlExpiredException("URL has expired");
+        }
+        url.setLastAccessed(LocalDateTime.now());
+        url.setClickCount(url.getClickCount() + 1);
+        urlRepository.save(url);
+        return generateQrCode(url.getLongUrl());
+    }
+
+    private byte[] generateQrCode(String longUrl) {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = null;
+        try {
+            bitMatrix = qrCodeWriter.encode(longUrl, BarcodeFormat.QR_CODE, QR_WIDTH,QR_HEIGHT);
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
+        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(bufferedImage,"png",byteArrayOutputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 }
