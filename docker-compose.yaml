@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: url-db
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - url
+
+  url-snip:
+    image: url-snip:latest
+    container_name: url-snip
+    depends_on:
+      - mysql
+    ports:
+      - "7000:7000"
+    environment:
+      SPRING_DATASOURCE_URL: "${DB_URL}"
+      SPRING_DATASOURCE_USERNAME: "${DB_USER}"
+      SPRING_DATASOURCE_PASSWORD: "${DB_PASSWORD}"
+      ABSOLUTE_URL: "${ABSOLUTE_URL}"
+    networks:
+      - url
+
+volumes:
+  mysql_data:
+networks:
+  url:
+    driver: bridge
