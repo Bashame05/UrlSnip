@@ -27,5 +27,8 @@ public class UrlMapping {
     private LocalDateTime lastAccessed;
     private LocalDateTime expiresAt;
     private Long clickCount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User urlOwner;
 
 }
