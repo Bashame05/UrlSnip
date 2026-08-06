@@ -46,4 +46,17 @@ public class GlobalExceptionHandler {
                         urlExpiredException.getMessage()
                 ));
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(UserAlreadyExistsException userAlreadyExistsException) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        userAlreadyExistsException.getMessage()
+                ));
+    }
 }
