@@ -1,6 +1,7 @@
 package com.makar.UrlSnip.controller;
 
 
+import com.makar.UrlSnip.dto.UserLoginDto;
 import com.makar.UrlSnip.dto.UserRegisterDto;
 import com.makar.UrlSnip.dto.UserResponseDto;
 import com.makar.UrlSnip.service.UserService;
@@ -20,5 +21,10 @@ public class UserController {
     @PostMapping("/api/auth/register")
     public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         return ResponseEntity.ok(userService.registerUser(userRegisterDto));
+    }
+
+    @PostMapping("/api/auth/login")
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto){
+        return ResponseEntity.ok(userService.login(userLoginDto));
     }
 }
