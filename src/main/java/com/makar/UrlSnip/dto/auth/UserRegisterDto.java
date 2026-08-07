@@ -1,4 +1,4 @@
-package com.makar.UrlSnip.dto;
+package com.makar.UrlSnip.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

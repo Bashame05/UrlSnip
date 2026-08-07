@@ -1,9 +1,9 @@
 package com.makar.UrlSnip.controller;
 
 
-import com.makar.UrlSnip.dto.UserLoginDto;
-import com.makar.UrlSnip.dto.UserRegisterDto;
-import com.makar.UrlSnip.dto.UserResponseDto;
+import com.makar.UrlSnip.dto.auth.UserLoginDto;
+import com.makar.UrlSnip.dto.auth.UserRegisterDto;
+import com.makar.UrlSnip.dto.auth.UserResponseDto;
 import com.makar.UrlSnip.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.makar.UrlSnip.mapper;
 
-import com.makar.UrlSnip.dto.UrlAnalyticsDto;
+import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
 import com.makar.UrlSnip.model.UrlMapping;
 import com.makar.UrlSnip.utils.ShortUrlBuilder;
 import org.springframework.stereotype.Component;

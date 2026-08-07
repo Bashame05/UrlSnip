@@ -1,9 +1,9 @@
 package com.makar.UrlSnip.controller;
 
 
-import com.makar.UrlSnip.dto.UrlAnalyticsDto;
-import com.makar.UrlSnip.dto.UrlRequestDto;
-import com.makar.UrlSnip.dto.UrlResponseDto;
+import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
+import com.makar.UrlSnip.dto.url.UrlRequestDto;
+import com.makar.UrlSnip.dto.url.UrlResponseDto;
 import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

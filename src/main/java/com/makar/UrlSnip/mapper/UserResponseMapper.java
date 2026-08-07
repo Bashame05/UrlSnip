@@ -1,6 +1,6 @@
 package com.makar.UrlSnip.mapper;
 
-import com.makar.UrlSnip.dto.UserResponseDto;
+import com.makar.UrlSnip.dto.auth.UserResponseDto;
 import com.makar.UrlSnip.model.User;
 import org.springframework.stereotype.Component;
 

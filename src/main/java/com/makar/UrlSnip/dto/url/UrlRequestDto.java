@@ -1,4 +1,4 @@
-package com.makar.UrlSnip.dto;
+package com.makar.UrlSnip.dto.url;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

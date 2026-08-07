@@ -1,13 +1,14 @@
 package com.makar.UrlSnip.service;
 
 
-import com.makar.UrlSnip.dto.UserLoginDto;
-import com.makar.UrlSnip.dto.UserRegisterDto;
-import com.makar.UrlSnip.dto.UserResponseDto;
+import com.makar.UrlSnip.dto.auth.UserLoginDto;
+import com.makar.UrlSnip.dto.auth.UserRegisterDto;
+import com.makar.UrlSnip.dto.auth.UserResponseDto;
 import com.makar.UrlSnip.exception.UserAlreadyExistsException;
 import com.makar.UrlSnip.mapper.UserResponseMapper;
 import com.makar.UrlSnip.model.User;
 import com.makar.UrlSnip.repository.UserRepository;
+import com.makar.UrlSnip.security.JwtService;
 import com.makar.UrlSnip.utils.ROLES;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,12 +25,18 @@ public class UserService {
     private final UserResponseMapper userResponseMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, UserResponseMapper userResponseMapper , PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public UserService(UserRepository userRepository,
+                       UserResponseMapper userResponseMapper,
+                       PasswordEncoder passwordEncoder,
+                       AuthenticationManager authenticationManager,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.userResponseMapper = userResponseMapper;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     public UserResponseDto registerUser(UserRegisterDto userRegisterDto) {
@@ -49,7 +56,7 @@ public class UserService {
         try{
             Authentication authentication  = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userLoginDto.userName(),userLoginDto.userPassword()));
-            return "jwt";
+            return jwtService.generateToken(userLoginDto.userName());
         }catch (BadCredentialsException e){
             return e.getMessage();
         }
