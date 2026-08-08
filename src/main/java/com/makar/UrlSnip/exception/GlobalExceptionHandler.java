@@ -59,4 +59,17 @@ public class GlobalExceptionHandler {
                         userAlreadyExistsException.getMessage()
                 ));
     }
+
+    @ExceptionHandler(UrlNotOwnedException.class)
+    public ResponseEntity<ErrorResponseDto> handleUrlNotOwnedException(UrlNotOwnedException urlNotOwnedException) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        urlNotOwnedException.getMessage()
+                ));
+    }
 }

@@ -26,4 +26,8 @@ public class UserPrincipal implements UserDetails {
     public String getUsername() {
         return user.getUserName();
     }
+
+    public User getUser() {
+        return user;
+    }
 }

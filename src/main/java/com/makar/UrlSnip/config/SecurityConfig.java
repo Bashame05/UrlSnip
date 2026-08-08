@@ -3,6 +3,7 @@ package com.makar.UrlSnip.config;
 
 import com.makar.UrlSnip.security.JwtFilter;
 import com.makar.UrlSnip.security.MyUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,11 +33,22 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/auth/**","/error").permitAll()
+                        .requestMatchers("/api/auth/**","/error","/{identifier}").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("""
+                                    {
+                                        "error": "Unauthorized",
+                                        "message": "Authentication is required to access this resource"
+                                    }
+                                    """);
+                        }))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

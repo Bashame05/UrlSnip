@@ -12,11 +12,14 @@ import com.makar.UrlSnip.dto.url.UrlRequestDto;
 import com.makar.UrlSnip.dto.url.UrlResponseDto;
 import com.makar.UrlSnip.exception.AliasNotAllowedException;
 import com.makar.UrlSnip.exception.NoSuchUrlException;
+import com.makar.UrlSnip.exception.UrlNotOwnedException;
 import com.makar.UrlSnip.exception.UrlExpiredException;
 import com.makar.UrlSnip.mapper.UrlAnalyticsMapper;
 import com.makar.UrlSnip.mapper.UrlResponseMapper;
 import com.makar.UrlSnip.model.UrlMapping;
+import com.makar.UrlSnip.model.User;
 import com.makar.UrlSnip.repository.UrlRepository;
+import com.makar.UrlSnip.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -51,8 +54,9 @@ public class UrlService {
     private final int QR_WIDTH = 300;
     private final int QR_HEIGHT = 300;
 
-    public UrlResponseDto shortenUrl(UrlRequestDto urlRequestDto) {
-        Optional<UrlMapping> urlMapping = findExistingUrl(urlRequestDto.longUrl());
+    public UrlResponseDto shortenUrl(UrlRequestDto urlRequestDto, UserPrincipal userPrincipal) {
+        //refactor the checks and enforce new checks and constraints
+        Optional<UrlMapping> urlMapping = findExistingUrl(urlRequestDto.longUrl(),userPrincipal.getUser());
         if (urlMapping.isPresent()) {
             return urlResponseMapper.apply(urlMapping.get());
         }
@@ -68,6 +72,7 @@ public class UrlService {
         newUrl.setClickCount(0L);
         newUrl.setCreatedAt(LocalDateTime.now());
         newUrl.setLastAccessed(null);
+        newUrl.setUrlOwner(userPrincipal.getUser());
         return urlResponseMapper.apply(urlRepository.save(newUrl));
     }
 
@@ -102,8 +107,8 @@ public class UrlService {
         return shortUrl;
     }
 
-    private Optional<UrlMapping> findExistingUrl(String longUrl) {
-        return urlRepository.findByLongUrl(longUrl);
+    private Optional<UrlMapping> findExistingUrl(String longUrl, User user) {
+        return urlRepository.findByLongUrlAndUrlOwner(longUrl,user);
     }
 
     public String redirect(String identifier) {
@@ -116,8 +121,11 @@ public class UrlService {
         return urlRepository.save(url).getLongUrl();
     }
 
-    public UrlAnalyticsDto analytics(String identifier) {
+    public UrlAnalyticsDto analytics(String identifier,UserPrincipal userPrincipal) {
         UrlMapping url = findByIdentifier(identifier);
+        if(!isUserAuthorized(url.getShortUrl(),url.getCustomAlias(),userPrincipal)){
+            throw new UrlNotOwnedException("You do not have permission to access this resource");
+        }
         return urlAnalyticsMapper.apply(url);
     }
 
@@ -127,8 +135,11 @@ public class UrlService {
         return urlMapping;
     }
     
-    public byte[] getQrCode(String identifier) {
+    public byte[] getQrCode(String identifier,UserPrincipal userPrincipal) {
         UrlMapping url = findByIdentifier(identifier);
+        if(!isUserAuthorized(url.getShortUrl(),url.getCustomAlias(),userPrincipal)){
+            throw new UrlNotOwnedException("You do not have permission to access this resource");
+        }
         if(url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new UrlExpiredException("URL has expired");
         }
@@ -154,5 +165,9 @@ public class UrlService {
             throw new RuntimeException(e);
         }
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private boolean isUserAuthorized(String shortUrl, String customAlias, UserPrincipal userPrincipal) {
+        return urlRepository.existsByShortUrlIgnoreCaseOrCustomAliasIgnoreCaseAndUrlOwner(shortUrl,customAlias,userPrincipal.getUser());
     }
 }
