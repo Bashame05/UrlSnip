@@ -58,7 +58,7 @@ public class UserService {
                     new UsernamePasswordAuthenticationToken(userLoginDto.userName(),userLoginDto.userPassword()));
             return jwtService.generateToken(userLoginDto.userName());
         }catch (BadCredentialsException e){
-            return e.getMessage();
+            throw new BadCredentialsException("Invalid credentials");
         }
     }
 }

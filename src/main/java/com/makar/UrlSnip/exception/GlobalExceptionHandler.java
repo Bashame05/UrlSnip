@@ -3,6 +3,8 @@ package com.makar.UrlSnip.exception;
 import com.makar.UrlSnip.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -72,4 +74,31 @@ public class GlobalExceptionHandler {
                         urlNotOwnedException.getMessage()
                 ));
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleBadCredentialsException(BadCredentialsException badCredentialsException) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        badCredentialsException.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponseDto(
+                        Instant.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        methodArgumentNotValidException.getMessage()
+                ));
+    }
+
 }
