@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,6 @@ public interface UrlRepository extends JpaRepository<UrlMapping, Long> {
                     "and u.urlOwner= :user"
     )
     boolean existsByShortUrlIgnoreCaseOrCustomAliasIgnoreCaseAndUrlOwner(String shortUrl, String customAlias, User user);
+    @Query("select u from UrlMapping  u where u.isFavourite IS TRUE AND u.urlOwner = :user")
+    List<UrlMapping> findAllByIsFavouriteAndUrlOwner(User user);
 }

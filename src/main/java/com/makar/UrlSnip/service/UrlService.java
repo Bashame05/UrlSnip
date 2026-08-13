@@ -10,12 +10,14 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
 import com.makar.UrlSnip.dto.url.UrlRequestDto;
 import com.makar.UrlSnip.dto.url.UrlResponseDto;
+import com.makar.UrlSnip.dto.url.UserFavouriteUrlDto;
 import com.makar.UrlSnip.exception.AliasNotAllowedException;
 import com.makar.UrlSnip.exception.NoSuchUrlException;
 import com.makar.UrlSnip.exception.UrlNotOwnedException;
 import com.makar.UrlSnip.exception.UrlExpiredException;
 import com.makar.UrlSnip.mapper.UrlAnalyticsMapper;
 import com.makar.UrlSnip.mapper.UrlResponseMapper;
+import com.makar.UrlSnip.mapper.UserFavouriteUrlMapper;
 import com.makar.UrlSnip.model.UrlMapping;
 import com.makar.UrlSnip.model.User;
 import com.makar.UrlSnip.repository.UrlRepository;
@@ -35,14 +37,17 @@ import java.util.regex.Pattern;
 public class UrlService {
     private final UrlRepository urlRepository;
     private final UrlResponseMapper urlResponseMapper;
-    public final UrlAnalyticsMapper urlAnalyticsMapper;
+    private final UrlAnalyticsMapper urlAnalyticsMapper;
+    private final UserFavouriteUrlMapper userFavouriteUrlMapper;
 
     public UrlService(UrlRepository urlRepository,
                       UrlResponseMapper urlResponseMapper,
-                      UrlAnalyticsMapper urlAnalyticsMapper) {
+                      UrlAnalyticsMapper urlAnalyticsMapper,
+                      UserFavouriteUrlMapper userFavouriteUrlMapper) {
         this.urlRepository = urlRepository;
         this.urlResponseMapper = urlResponseMapper;
         this.urlAnalyticsMapper = urlAnalyticsMapper;
+        this.userFavouriteUrlMapper = userFavouriteUrlMapper;
     }
 
     private final String regex = "^[a-zA-Z0-9]+$";
@@ -169,5 +174,25 @@ public class UrlService {
 
     private boolean isUserAuthorized(String shortUrl, String customAlias, UserPrincipal userPrincipal) {
         return urlRepository.existsByShortUrlIgnoreCaseOrCustomAliasIgnoreCaseAndUrlOwner(shortUrl,customAlias,userPrincipal.getUser());
+    }
+
+    public void markUrlAsFavourite(String identifier,UserPrincipal userPrincipal) {
+        UrlMapping url = findByIdentifier(identifier);
+        if(!isUserAuthorized(url.getShortUrl(),url.getCustomAlias(),userPrincipal)){
+            throw new UrlNotOwnedException("You do not have permission to access this resource");
+        }
+        if(url.getExpiresAt() != null && url.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new UrlExpiredException("URL has expired");
+        }
+        url.setFavourite(true);
+        urlRepository.save(url);
+    }
+
+    public List<UserFavouriteUrlDto> getUserFavouriteUrls(UserPrincipal userPrincipal) {
+        List<UserFavouriteUrlDto> userFavouriteUrls = urlRepository.findAllByIsFavouriteAndUrlOwner(userPrincipal.getUser())
+                .stream()
+                .map(userFavouriteUrlMapper)
+                .toList();
+        return userFavouriteUrls;
     }
 }

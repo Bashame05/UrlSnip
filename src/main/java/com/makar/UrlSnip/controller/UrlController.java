@@ -4,6 +4,7 @@ package com.makar.UrlSnip.controller;
 import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
 import com.makar.UrlSnip.dto.url.UrlRequestDto;
 import com.makar.UrlSnip.dto.url.UrlResponseDto;
+import com.makar.UrlSnip.dto.url.UserFavouriteUrlDto;
 import com.makar.UrlSnip.security.UserPrincipal;
 import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class UrlController {
@@ -29,7 +31,7 @@ public class UrlController {
     }
 
     @GetMapping("/{identifier}")
-    public ResponseEntity<Void> redirect(@PathVariable String identifier, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<Void> redirect(@PathVariable String identifier) {
         String longUrl = urlService.redirect(identifier);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
@@ -47,5 +49,20 @@ public class UrlController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlService.getQrCode(identifier,userPrincipal));
+    }
+
+    @PostMapping("/api/url/{identifier}/favourites")
+    public ResponseEntity<String> markUrlAsFavourite(@PathVariable String identifier, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        urlService.markUrlAsFavourite(identifier,userPrincipal);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Url marked as favourite");
+    }
+
+    @GetMapping("/api/url/favourites")
+    public ResponseEntity<List<UserFavouriteUrlDto>> getUserFavouriteUrl(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(urlService.getUserFavouriteUrls(userPrincipal));
     }
 }
