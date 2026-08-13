@@ -1,10 +1,7 @@
 package com.makar.UrlSnip.controller;
 
 
-import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
-import com.makar.UrlSnip.dto.url.UrlRequestDto;
-import com.makar.UrlSnip.dto.url.UrlResponseDto;
-import com.makar.UrlSnip.dto.url.UserFavouriteUrlDto;
+import com.makar.UrlSnip.dto.url.*;
 import com.makar.UrlSnip.security.UserPrincipal;
 import com.makar.UrlSnip.service.UrlService;
 import org.springframework.http.HttpStatus;
@@ -64,5 +61,12 @@ public class UrlController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlService.getUserFavouriteUrls(userPrincipal));
+    }
+
+    @GetMapping("/api/user/analytics")
+    public ResponseEntity<UserAnalyticsDto>  getUserAnalytics(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(urlService.getUserAnalytics(userPrincipal));
     }
 }

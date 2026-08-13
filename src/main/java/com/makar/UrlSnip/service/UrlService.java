@@ -7,10 +7,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.makar.UrlSnip.dto.url.UrlAnalyticsDto;
-import com.makar.UrlSnip.dto.url.UrlRequestDto;
-import com.makar.UrlSnip.dto.url.UrlResponseDto;
-import com.makar.UrlSnip.dto.url.UserFavouriteUrlDto;
+import com.makar.UrlSnip.dto.url.*;
 import com.makar.UrlSnip.exception.AliasNotAllowedException;
 import com.makar.UrlSnip.exception.NoSuchUrlException;
 import com.makar.UrlSnip.exception.UrlNotOwnedException;
@@ -194,5 +191,9 @@ public class UrlService {
                 .map(userFavouriteUrlMapper)
                 .toList();
         return userFavouriteUrls;
+    }
+    public UserAnalyticsDto getUserAnalytics(UserPrincipal userPrincipal) {
+        return urlRepository.getUrlAnalyticsByOwnerId(userPrincipal.getUser().getUserId())
+                .orElseThrow(()-> new NoSuchUrlException("Not enough analytics to display"));
     }
 }
