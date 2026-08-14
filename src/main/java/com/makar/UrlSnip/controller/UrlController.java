@@ -40,7 +40,7 @@ public class UrlController {
         }else{
             clientIp = clientIp.split(",")[0].trim();
         }
-        Bucket bucket = rateLimitConfig.getBucket(request.getRemoteAddr());
+        Bucket bucket = rateLimitConfig.getBucket(clientIp);
         if(bucket.tryConsume(1)) {
             String longUrl = urlService.redirect(identifier);
             return ResponseEntity
