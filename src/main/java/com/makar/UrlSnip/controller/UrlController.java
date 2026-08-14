@@ -34,6 +34,12 @@ public class UrlController {
 
     @GetMapping("/{identifier}")
     public ResponseEntity<Void> redirect(@PathVariable String identifier , HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if(clientIp == null || clientIp.isEmpty()) {
+            clientIp = request.getRemoteAddr();
+        }else{
+            clientIp = clientIp.split(",")[0].trim();
+        }
         Bucket bucket = rateLimitConfig.getBucket(request.getRemoteAddr());
         if(bucket.tryConsume(1)) {
             String longUrl = urlService.redirect(identifier);
