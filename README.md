@@ -3,6 +3,7 @@
 A fast, lightweight URL shortener REST API built with Spring Boot and MySQL — now with authentication, user-owned URLs, and rate limiting.
 
 > **Version:** v3.0.0
+> **Live API URL:** [https://urlsnip-aoa1.onrender.com](https://urlsnip-aoa1.onrender.com)
 
 ---
 
@@ -25,7 +26,7 @@ A fast, lightweight URL shortener REST API built with Spring Boot and MySQL — 
 
 ## Overview
 
-UrlSnip takes long URLs and converts them into compact, shareable short links. When a short link is visited, the user is seamlessly redirected (HTTP 302) to the original URL. Every redirect is tracked, giving you basic click analytics out of the box. You can also set custom aliases, configure expiration dates, and generate QR codes for any short link.
+UrlSnip takes long URLs and converts them into compact, shareable short links. When a short link is visited, the user is seamlessly redirected (HTTP 302) to the original URL. Every redirect is tracked, giving you basic click analytics out of the box. You can also set custom aliases, configure expiration dates, and generate QR codes for any short link. The API is hosted live on Render at [https://urlsnip-aoa1.onrender.com](https://urlsnip-aoa1.onrender.com).
 
 Users register and log in to receive a JWT token. All URL operations are scoped to the authenticated user — each shortened URL is owned by the user who created it, and only the owner can view analytics, generate QR codes, or mark URLs as favourites. Public redirect endpoints are rate-limited per IP to prevent abuse.
 
