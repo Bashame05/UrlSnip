@@ -3,7 +3,8 @@
 A fast, lightweight URL shortener REST API built with Spring Boot and MySQL — now with authentication, user-owned URLs, and rate limiting.
 
 > **Version:** v3.0.0
-> **Live API URL:** [https://urlsnip-aoa1.onrender.com](https://urlsnip-aoa1.onrender.com)
+
+> **DEPLOYED API URL:** [https://urlsnip-aoa1.onrender.com](https://urlsnip-aoa1.onrender.com)
 
 ---
 
