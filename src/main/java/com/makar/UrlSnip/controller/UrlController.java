@@ -2,8 +2,11 @@ package com.makar.UrlSnip.controller;
 
 
 import com.makar.UrlSnip.dto.url.*;
+import com.makar.UrlSnip.ratelimit.RateLimitConfig;
 import com.makar.UrlSnip.security.UserPrincipal;
 import com.makar.UrlSnip.service.UrlService;
+import io.github.bucket4j.Bucket;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +21,10 @@ import java.util.List;
 public class UrlController {
 
     private final UrlService urlService;
-    public UrlController(UrlService urlService) {
+    private final RateLimitConfig rateLimitConfig;
+    public UrlController(UrlService urlService, RateLimitConfig rateLimitConfig) {
         this.urlService = urlService;
+        this.rateLimitConfig = rateLimitConfig;
     }
     @PostMapping("/api/urls")
     public ResponseEntity<UrlResponseDto> shortenUrl(@Validated @RequestBody UrlRequestDto urlRequestDto,
@@ -28,12 +33,19 @@ public class UrlController {
     }
 
     @GetMapping("/{identifier}")
-    public ResponseEntity<Void> redirect(@PathVariable String identifier) {
-        String longUrl = urlService.redirect(identifier);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .location(URI.create(longUrl))
-                .build();
+    public ResponseEntity<Void> redirect(@PathVariable String identifier , HttpServletRequest request) {
+        Bucket bucket = rateLimitConfig.getBucket(request.getRemoteAddr());
+        if(bucket.tryConsume(1)) {
+            String longUrl = urlService.redirect(identifier);
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .location(URI.create(longUrl))
+                    .build();
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .build();
+        }
     }
 
     @GetMapping("/api/urls/{identifier}/analytics")
